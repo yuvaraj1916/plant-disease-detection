@@ -1,0 +1,6 @@
+{
+  "name": "LeafScan AI",
+  "description": "AI-powered plant disease detection tool with high-resolution visual analysis and offline demo modes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

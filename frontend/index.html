@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LeafScan AI - Crop Disease Diagnostic Portal</title>
+    
+    <!-- Custom Style Sheet link -->
+    <link rel="stylesheet" href="/style.css" />
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <!-- App Main Layout Container -->
+    <div class="app-container" id="appRoot">
+      
+      <!-- Left Column: Dynamic Interactive Diagnostic Portal -->
+      <main>
+        <!-- Top bar containing Theme Switcher -->
+        <div class="top-bar" id="appTopBar">
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
+            <i data-lucide="sun" class="icon-sun"></i>
+            <i data-lucide="moon" class="icon-moon"></i>
+          </button>
+        </div>
+
+        <!-- Hero Title Section -->
+        <section class="hero" id="appHero">
+          <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 3.5 1 9.8a7 7 0 0 1-13.9.2"></path><path d="M9 22v-4h4"></path></svg>
+            LeafScan AI
+          </h1>
+          <p>Instantly diagnose plant leaf anomalies using advanced deep convolutional focus mapping (HiResCAM)</p>
+        </section>
+
+        <!-- Dynamic Error Banner Container (Hidden by default) -->
+        <div class="notifications-bar">
+          <div class="error-banner hidden" id="errorBanner">
+            <i data-lucide="alert-circle" style="color: var(--error-color);"></i>
+            <div class="error-banner-content">
+              <h4>An Error Occurred</h4>
+              <p>Error description placeholder.</p>
+              <button type="button" id="errorRetryBtn">Retry Scan</button>
+            </div>
+          </div>
+
+          <!-- Interactive Demo/Simulate Mode control panel -->
+          <div class="demo-banner" id="demoBanner">
+            <div class="demo-banner-content">
+              <i data-lucide="sparkles" style="color: var(--accent-warm);"></i>
+              <span><strong>Sandbox Simulation Mode:</strong> If you don't have the local Python backend running on port 8000, keep this enabled to immediately test full UI interactions.</span>
+            </div>
+            <label class="demo-toggle-switch" title="Toggle Demo Mode">
+              <input type="checkbox" id="demoToggle" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="workspace-layout">
+          <!-- Large Premium Upload Container Zone -->
+          <div class="upload-container" id="uploadCard">
+            <div class="drop-zone" id="dropZone">
+              <div class="drop-zone-content">
+                <i data-lucide="upload-cloud" class="cloud-icon" style="width: 48px; height: 48px;"></i>
+                <div>
+                  <p class="prompt-text">Drag & drop raw crop leaf image here</p>
+                  <p class="support-text">Supports JPG, JPEG, or PNG files up to 10MB</p>
+                </div>
+                <button type="button" class="btn-browse" id="btnBrowse">Browse Files</button>
+              </div>
+              <!-- File input tag hidden -->
+              <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+            </div>
+
+            <!-- Submit pill button trigger -->
+            <div class="action-container">
+              <button type="button" class="btn-analyze" id="btnAnalyze" disabled>
+                <i data-lucide="scan-line"></i>
+                <span>Analyze Leaf Patterns</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- High contrast loading pulse screen -->
+          <div class="loading-wrapper hidden" id="loadingWrapper">
+            <div class="pulse-leaf-container">
+              <i data-lucide="leaf" style="width: 28px; height: 28px;"></i>
+            </div>
+            <span class="loading-text">Analyzing leaf pattern matrices...</span>
+          </div>
+
+          <!-- Main Prediction Diagnostic Result Dashboard -->
+          <section class="results-section hidden" id="resultsSection">
+            
+            <!-- Double side-by-side Image Panel -->
+            <div class="image-grid" id="resultsImageGrid">
+              <!-- Original Source file card -->
+              <div class="image-card" id="cardOriginal">
+                <h3>
+                  <i data-lucide="image" style="width: 14px; height: 14px;"></i>
+                  Original Image
+                </h3>
+                <div class="image-wrapper">
+                  <img id="resultOriginalImg" src="" alt="Uploaded original plant leaf" />
+                </div>
+              </div>
+
+              <!-- Heatmap diagnosis focus area card -->
+              <div class="image-card" id="cardHeatmap">
+                <h3>
+                  <i data-lucide="eye" style="width: 14px; height: 14px;"></i>
+                  AI Focus Areas (HiResCAM)
+                </h3>
+                <div class="image-wrapper">
+                  <img id="resultHeatmapImg" src="" alt="Deep learning focus area heatmap" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Diagnostic Metrics Section -->
+            <div class="report-grid" id="resultsReportGrid">
+              
+              <!-- Disease name info -->
+              <div class="diagnosis-details">
+                <span class="status-badge green" id="resultStatusBadge">
+                  <i data-lucide="check-circle"></i>
+                  <span>High Confidence Match</span>
+                </span>
+                <h2 id="resultDiseaseName">Tomato Late Blight</h2>
+              </div>
+
+              <!-- SVG Animated Circular progress confidence ring -->
+              <div class="confidence-ring-container">
+                <svg class="confidence-svg">
+                  <circle class="confidence-bg-circle" cx="60" cy="60" r="52"></circle>
+                  <!-- SVG path math: cx=60, cy=60, r=52, Circumference = 326.72 -->
+                  <circle class="confidence-fill-circle green" id="confidenceFillCircle" cx="60" cy="60" r="52" stroke-dasharray="326.72" stroke-dashoffset="326.72"></circle>
+                </svg>
+                <div class="confidence-label">
+                  <span class="confidence-value" id="confidenceValueText">94%</span>
+                  <span class="confidence-title">Confidence</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Informational treatment card -->
+            <div class="info-card" id="treatmentInfoCard">
+              <div class="info-card-header">
+                <i data-lucide="shield-alert"></i>
+                <span>Condition Details & Organic Response</span>
+              </div>
+              <p class="description" id="resultDescription">
+                Disease description.
+              </p>
+              <div class="treatment-section">
+                <h4>Suggested Treatment Protocol</h4>
+                <p id="resultTreatment">
+                  Treatment steps.
+                </p>
+              </div>
+            </div>
+
+          </section>
+        </div>
+
+      </main>
+
+      <!-- Right Column: Collapsible Scan Record History Panel -->
+      <aside class="history-sidebar" id="appHistorySidebar">
+        <div class="history-header">
+          <h2>
+            <i data-lucide="history"></i>
+            <span>Scan History</span>
+          </h2>
+          <span class="history-count" id="historyCount">0</span>
+        </div>
+
+        <div class="history-list" id="historyList">
+          <!-- Populated dynamically via JS -->
+          <div class="history-list-empty" id="historyEmptyState">
+            <i data-lucide="history" style="width: 32px; height: 32px;"></i>
+            <p>No scans performed yet in this session</p>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Main custom scripts link -->
+    <script src="/script.js"></script>
+  </body>
+</html>
