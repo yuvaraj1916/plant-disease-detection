@@ -7,3 +7,4 @@ pillow
 numpy
 grad-cam
 matplotlib
+opencv-python-headless
